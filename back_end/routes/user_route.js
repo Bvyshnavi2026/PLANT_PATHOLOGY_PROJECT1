@@ -3,9 +3,22 @@ let router=express.Router();
 router.post("/addusers",(req,res)=>{
     res.send("add users the route")
 });
-router.post("/login",(req,res)=>{
-     res.send("login the route")
+router.post("/login",async(req,res)=>{
+    let result=await users.findOne({email:req.body.email})
+    // result.password=undefined;
+    if(result)
+        {
+        let matchpass=await bcrypt.compare(req.body.password,result.password);
+        if(matchpass){
+            res.send("Login Successfull");
+        }else{
+            res.send("Login failed");
+        }
+    }else{
+            res.send("user not found");
+        }
 });
+
 router.put("/updateresponse",(req,res)=>{
     res.send("update response  route");
 });
